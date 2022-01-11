@@ -2,6 +2,14 @@ require('dotenv').config();
 const express = require('express')
 const app = express()
 const port = 5000
+const bodyParser = require("body-parser")
+const { User } = require("./models/user");
+
+// application/x-www-form-urlencoded 코드로 된 것을 가져올 수 있게 설정
+app.use(bodyParser.urlencoded({extended: true}));
+
+// application/json 코드로 된 것을 가져올 수 있게 설정
+app.use(bodyParser.json());
 
 const mongoose = require("mongoose")
 mongoose.connect(`mongodb+srv://sujin:${process.env.DB_PW}@boilerplate-login.dbnlc.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`, {
@@ -15,6 +23,22 @@ mongoose.connect(`mongodb+srv://sujin:${process.env.DB_PW}@boilerplate-login.dbn
 app.get('/', (req, res) => {
     res.send('Hello World!')
 })
+
+app.post("/register", (req, res) => {
+    // 회원가입에 필요한 정보를 client에서 가져오면
+    // DB에 넣어준다.
+    // bodyParser를 통해서 req.body로 클라이언트에서 보내는 정보를 받아준다.
+    const user = new User(req.body);
+
+    // req.body 정보들이 user 모델에 저장된 것
+    // save -> 몽고DB 메소드?
+    user.save((err, userInfo) => {
+        if (err) return res.json({ success: false, err });
+        return res.status(200).json({
+            success: true
+        });
+    });
+});
 
 app.listen(port, () => {
     console.log(`Example app listening at http://localhost:${port}`)
