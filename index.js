@@ -2,6 +2,7 @@ const express = require('express')
 const app = express()
 const port = 5000
 const bodyParser = require("body-parser")
+const cookieParser = require("cookie-parser");
 const { User } = require("./models/user");
 
 const config = require("./config/key");
@@ -11,6 +12,8 @@ app.use(bodyParser.urlencoded({extended: true}));
 
 // application/json 코드로 된 것을 가져올 수 있게 설정
 app.use(bodyParser.json());
+
+app.use(cookieParser());
 
 const mongoose = require("mongoose")
 mongoose.connect(config.mongoURI, {
@@ -56,13 +59,21 @@ app.post("/login", (req, res) => {
             if(!isMatch) {
                 return res.json({
                     loginSuccess: false,
-                    messge: "비밀번호가 틀렸습니다."
+                    message: "비밀번호가 틀렸습니다."
                 });
             }
 
             // 토큰 생성
             user.generateToken((err, user) => {
+                if (err) return res.status(400).send(err);
 
+                // 토큰을 저장한다. 쿠키, 세션, 로컬스토리지
+                res.cookie("x_auth", user.token)
+                    .status(200)
+                    .json({
+                        loginSuccess: true,
+                        userId: user._id
+                    });
             });
         });
     })
