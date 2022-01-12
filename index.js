@@ -21,7 +21,7 @@ mongoose.connect(`mongodb+srv://sujin:${process.env.DB_PW}@boilerplate-login.dbn
 
 
 app.get('/', (req, res) => {
-    res.send('Hello World!')
+    res.send('Hello World! nodemon!')
 })
 
 app.post("/register", (req, res) => {
