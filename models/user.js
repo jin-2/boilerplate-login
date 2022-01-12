@@ -23,7 +23,7 @@ const userSchema = mongoose.Schema({
     },
     role: {
        type: Number,
-        default: 0
+        default: 0 // 0: 일반유저, 0 아니면 관리자
     },
     image: String,
     token: {
@@ -71,8 +71,21 @@ userSchema.methods.generateToken = function(cb) {
         if (err) return cb(err);
         cb(null, user);
     });
-
 };
+
+userSchema.methods.findByToken = function(token, cb) {
+    const user = this;
+
+    // 토큰 decode
+    jwt.verify(token, "secretToken", function(err, decoded) {
+        // 유저 아이디로 유저를 찾은 다음
+        // 클라이언트에서 가져온 토큰과 DB에 보관된 토큰이 일치하는지 확인
+        user.findOne({"_id": decoded, "token": token}, function(err, user) {
+            if (err) return cb(err);
+            cb(null, user);
+        });
+    });
+}
 
 const User = mongoose.model("User", userSchema);
 
