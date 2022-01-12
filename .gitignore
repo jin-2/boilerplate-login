@@ -24,3 +24,5 @@ node-modules/
 .env.production.local
 .env.local
 /node_modules/
+
+dev.js

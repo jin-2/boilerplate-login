@@ -5,6 +5,8 @@ const port = 5000
 const bodyParser = require("body-parser")
 const { User } = require("./models/user");
 
+const config = require("./config/key");
+
 // application/x-www-form-urlencoded 코드로 된 것을 가져올 수 있게 설정
 app.use(bodyParser.urlencoded({extended: true}));
 
@@ -12,7 +14,7 @@ app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
 
 const mongoose = require("mongoose")
-mongoose.connect(`mongodb+srv://sujin:${process.env.DB_PW}@boilerplate-login.dbnlc.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`, {
+mongoose.connect(config.mongoURI, {
     useNewUrlParser: true,
     useUnifiedTopology: true
 })
