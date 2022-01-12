@@ -29,7 +29,7 @@ app.get('/', (req, res) => {
     res.send('Hello World! nodemon!')
 })
 
-app.post("/api/users/register", (req, res) => {
+app.post("/api/user/register", (req, res) => {
     // 회원가입에 필요한 정보를 client에서 가져오면
     // DB에 넣어준다.
     // bodyParser를 통해서 req.body로 클라이언트에서 보내는 정보를 받아준다.
@@ -45,7 +45,7 @@ app.post("/api/users/register", (req, res) => {
     });
 });
 
-app.post("/api/users/login", (req, res) => {
+app.post("/api/user/login", (req, res) => {
     // email 찾기
     User.findOne({ email: req.body.email }, (err, user) => {
         if (!user) {
@@ -80,7 +80,7 @@ app.post("/api/users/login", (req, res) => {
     })
 });
 
-app.get("/api/users/auth", auth, (req, res) => {
+app.get("/api/user/auth", auth, (req, res) => {
     res.status(200).json({
         _id: req.user._id,
         isAdmin: req.user.role !== 0,
@@ -91,6 +91,22 @@ app.get("/api/users/auth", auth, (req, res) => {
         role: req.user.role,
         image: req.user.image
     });
+});
+
+app.get("/api/user/logout", auth, (req, res) => {
+    // 유저의 아이디로 찾아 토큰을 지운다
+    User.findOneAndUpdate(
+        { _id: req.user._id },
+        {token: ""},
+        (err, user) => {
+            if (err) return res.json({
+                success: false,
+                err
+            })
+            return res.status(200).send({
+                success: true
+            });
+        })
 });
 
 app.listen(port, () => {
