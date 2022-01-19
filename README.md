@@ -70,7 +70,7 @@ DB에 저장된 비밀번호가 안전하지 않으므로 암호화 한 후 DB�
 2. [example code 따라하기](https://github.com/auth0/node-jsonwebtoken) `jwt.sign(user._id.toString(), "secretToken");`
 3. 쿠키를 쉽게 추출하기 위해 cookie-parser 설치 `npm i cookie-parser --save`
 
-### Auth 기능 만들기
+### Auth 기능 만들기리
 권한 체크
 
 1. 라우터 추가 `app.get("/api/users/auth", auth, (req, res) => {})`
