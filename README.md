@@ -204,3 +204,16 @@ npm install redux react-redux redux-promise redux-thunk --save
 - 미들웨어는 dispatch에게 plain object가 아닌 무언가를 허용하는 방법을 알려준다.
 - redux-thunk는 function을 허용하는 방법을 dispatch에게 알려준다.
 - redux-promise는 promise를 허용하는 방법을 dispatch에게 알려준다.
+
+### React vs React Hooks
+
+| Class Component       | Functional Component  |
+|-----------------------|-----------------------|
+| Provide more features | Provide less features |
+| Longer Code           | Shorter Code          |
+| More Complex Code     | Simpler Code          |
+| Slower Performance    | Faster Performance    |
+
+## Feature
+
+### 로그인 페이지
