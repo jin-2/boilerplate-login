@@ -1,83 +1,91 @@
-import React from "react";
-import { Form, Input, Button, Checkbox } from "antd";
+import React, { useState } from "react";
+import styled from "@emotion/styled";
 import PageLayout from "../PageLayout/PageLayout";
+import axios from "axios";
 
 const LoginPage = () => {
-    const onFinish = (values) => {
-        console.log("Success:", values);
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+
+    const handleEmail = (e) => {
+        setEmail(e.currentTarget.value);
     };
 
-    const onFinishFailed = (errorInfo) => {
-        console.log("Failed:", errorInfo);
+    const handlePassword = (e) => {
+        setPassword(e.currentTarget.value);
+    };
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+
+        axios
+            .post("api/user/login", {
+                email,
+                password
+            })
+            .then((json) => console.log(json.data));
     };
 
     return (
         <PageLayout>
-            <Form
-                name="basic"
-                labelCol={{
-                    span: 8
-                }}
-                wrapperCol={{
-                    span: 16
-                }}
-                initialValues={{
-                    remember: true
-                }}
-                onFinish={onFinish}
-                onFinishFailed={onFinishFailed}
-                autoComplete="off"
-            >
-                <Form.Item
-                    label="email"
-                    name="email"
-                    rules={[
-                        {
-                            required: true,
-                            message: "Please input your email!"
-                        }
-                    ]}
-                >
-                    <Input />
-                </Form.Item>
+            <form onSubmit={handleSubmit}>
+                <InputBox>
+                    <label className="label-wrap">
+                        <span className="label">E-mail</span>
+                        <input
+                            className="input"
+                            type="email"
+                            value={email}
+                            onChange={handleEmail}
+                        />
+                    </label>
+                </InputBox>
 
-                <Form.Item
-                    label="Password"
-                    name="password"
-                    rules={[
-                        {
-                            required: true,
-                            message: "Please input your password!"
-                        }
-                    ]}
-                >
-                    <Input.Password />
-                </Form.Item>
+                <InputBox>
+                    <label className="label-wrap">
+                        <span className="label">Password</span>
+                        <input
+                            className="input"
+                            type="password"
+                            value={password}
+                            onChange={handlePassword}
+                        />
+                    </label>
+                </InputBox>
 
-                {/*<Form.Item*/}
-                {/*    name="remember"*/}
-                {/*    valuePropName="checked"*/}
-                {/*    wrapperCol={{*/}
-                {/*        offset: 8,*/}
-                {/*        span: 16*/}
-                {/*    }}*/}
-                {/*>*/}
-                {/*    <Checkbox>Remember me</Checkbox>*/}
-                {/*</Form.Item>*/}
-
-                <Form.Item
-                    wrapperCol={{
-                        offset: 8,
-                        span: 16
-                    }}
-                >
-                    <Button type="primary" htmlType="submit" block>
-                        Login
-                    </Button>
-                </Form.Item>
-            </Form>
+                <Button>로그인하기</Button>
+            </form>
         </PageLayout>
     );
 };
 
 export default LoginPage;
+
+const InputBox = styled.div`
+    margin-top: 20px;
+    margin-bottom: 20px;
+
+    .label-wrap {
+        display: block;
+    }
+
+    .label {
+        display: block;
+    }
+
+    .input {
+        width: 100%;
+        height: 60px;
+        font-size: 20px;
+    }
+`;
+
+const Button = styled.button`
+    width: 100%;
+    height: 60px;
+    background-color: indianred;
+    color: #fff;
+    border: 0;
+    font-size: 18px;
+    font-weight: 600;
+`;
