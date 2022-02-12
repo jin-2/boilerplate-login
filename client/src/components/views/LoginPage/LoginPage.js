@@ -1,9 +1,11 @@
 import React, { useState } from "react";
 import styled from "@emotion/styled";
 import PageLayout from "../PageLayout/PageLayout";
-import axios from "axios";
+import { useDispatch } from "react-redux";
+import { loginUser } from "../../../_actions/user_action";
 
-const LoginPage = () => {
+export default function LoginPage() {
+    const dispatch = useDispatch();
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
 
@@ -18,12 +20,18 @@ const LoginPage = () => {
     const handleSubmit = (e) => {
         e.preventDefault();
 
-        axios
-            .post("api/user/login", {
-                email,
-                password
-            })
-            .then((json) => console.log(json.data));
+        const data = {
+            email,
+            password
+        };
+
+        dispatch(loginUser(data)).then((res) => {
+            if (res.payload.loginSuccess) {
+                window.location.href = "/";
+            } else {
+                alert(res.payload.message);
+            }
+        });
     };
 
     return (
@@ -57,9 +65,7 @@ const LoginPage = () => {
             </form>
         </PageLayout>
     );
-};
-
-export default LoginPage;
+}
 
 const InputBox = styled.div`
     margin-top: 20px;
